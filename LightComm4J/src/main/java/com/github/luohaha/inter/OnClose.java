@@ -1,8 +1,7 @@
 package com.github.luohaha.inter;
 
-import com.github.luohaha.connection.Connection;
-import com.github.luohaha.context.Context;
+import com.github.luohaha.connection.Conn;
 
 public interface OnClose {
-	public void onClose(Connection connection);
+	public void onClose(Conn connection);
 }

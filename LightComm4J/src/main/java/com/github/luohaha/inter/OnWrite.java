@@ -1,8 +1,7 @@
 package com.github.luohaha.inter;
 
-import com.github.luohaha.connection.Connection;
-import com.github.luohaha.context.Context;
+import com.github.luohaha.connection.Conn;
 
 public interface OnWrite {
-	public void onWrite(Connection connection);
+	public void onWrite(Conn connection);
 }
