@@ -134,7 +134,7 @@ public class IoHandler {
 	private void closeOps(SocketChannel channel, int opsToClose) throws ClosedChannelException {
 		ContextBean bean = this.context.getChanToContextBean().get(channel);
 		int ops = bean.getOps();
-		ops ^= opsToClose;
+		ops = (~opsToClose) & ops;
 		bean.setOps(ops);
 		channel.register(this.selector, ops);
 	}

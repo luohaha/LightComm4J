@@ -24,7 +24,7 @@ public class Connection implements Conn {
 	// write function could be call just once
 	private boolean onWriteCalled = false;
 	private boolean readyToClose = false;
-	
+
 	public Connection(Context context, SocketChannel channel, Selector selector) {
 		super();
 		this.context = context;
@@ -32,7 +32,7 @@ public class Connection implements Conn {
 		this.selector = selector;
 	}
 
-	public void write(byte[] data) throws ConnectionCloseException, ClosedChannelException {
+	public synchronized void write(byte[] data) throws ConnectionCloseException, ClosedChannelException {
 		if (readyToClose)
 			throw new ConnectionCloseException();
 		ContextBean bean = context.getChanToContextBean().get(channel);
@@ -45,21 +45,24 @@ public class Connection implements Conn {
 		ops |= SelectionKey.OP_WRITE;
 		bean.setOps(ops);
 		this.channel.register(this.selector, ops);
+		this.selector.wakeup();
 	}
-	
+
 	/**
 	 * set close flag
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
-	public void close() throws IOException {
+	public synchronized void close() throws IOException {
 		this.readyToClose = true;
 		if (this.readyToWrite.isEmpty()) {
 			doClose();
 		}
 	}
-	
+
 	/**
 	 * close channel
+	 * 
 	 * @throws IOException
 	 */
 	public void doClose() throws IOException {
@@ -98,80 +101,85 @@ public class Connection implements Conn {
 		// TODO Auto-generated method stub
 		return this.channel.getRemoteAddress();
 	}
-	
+
 	/**
 	 * set send buffer's size
 	 */
 	public void setSendBuffer(int size) throws IOException {
 		this.channel.setOption(StandardSocketOptions.SO_SNDBUF, size);
 	}
-	
+
 	/**
 	 * get send buffer' size
+	 * 
 	 * @return
 	 * @throws IOException
 	 */
 	public int getSendBuffer() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_SNDBUF);
 	}
-	
+
 	/**
 	 * set recv buffer's size
 	 */
 	public void setRecvBuffer(int size) throws IOException {
 		this.channel.setOption(StandardSocketOptions.SO_RCVBUF, size);
 	}
-	
+
 	/**
 	 * get recv buffer's size
+	 * 
 	 * @return
 	 * @throws IOException
 	 */
 	public int getRecvBuffer() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_RCVBUF);
 	}
-	
+
 	/**
 	 * set keep alive
 	 */
 	public void setKeepAlive(boolean flag) throws IOException {
 		this.channel.setOption(StandardSocketOptions.SO_KEEPALIVE, flag);
 	}
-	
+
 	/**
 	 * get keep alive
+	 * 
 	 * @return
 	 * @throws IOException
 	 */
 	public boolean getKeepAlive() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_KEEPALIVE);
 	}
-	
+
 	/**
 	 * set reuse address
 	 */
 	public void setReUseAddr(boolean flag) throws IOException {
 		this.channel.setOption(StandardSocketOptions.SO_REUSEADDR, flag);
 	}
-	
+
 	/**
 	 * get reuse address
+	 * 
 	 * @return
 	 * @throws IOException
 	 */
 	public boolean getReUseAddr() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_REUSEADDR);
 	}
-	
+
 	/**
 	 * set no delay
 	 */
 	public void setNoDelay(boolean flag) throws IOException {
 		this.channel.setOption(StandardSocketOptions.TCP_NODELAY, flag);
 	}
-	
+
 	/**
 	 * get no delay
+	 * 
 	 * @return
 	 * @throws IOException
 	 */
