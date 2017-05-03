@@ -15,7 +15,6 @@ public class TestServer {
 			param.setOnAccept(conn -> {
 				System.out.println("accept!");
 				try {
-					conn.setKeepAlive(false);
 					SocketAddress address = conn.getRemoteAddress();
 					System.out.println(address.toString());
 				} catch (Exception e) {
@@ -25,16 +24,17 @@ public class TestServer {
 			});
 			param.setOnRead((conn, data) -> {
 				System.out.println("read!");
-			});
-			param.setOnWrite(conn -> {
+				System.out.println(new String(data));
 				try {
 					conn.write(String.valueOf(System.currentTimeMillis()).getBytes());
-					System.out.println(conn.getKeepAlive());
 					conn.close();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			});
+			param.setOnWrite(conn -> {
+				System.out.println("write!");
 			});
 			param.setOnClose(conn -> {
 				System.out.println("close!");

@@ -13,9 +13,21 @@ public class TestClient {
 		ClientParam param = new ClientParam();
 		param.setOnConnection((conn) -> {
 			System.out.println("connect!");
+			try {
+				conn.setKeepAlive(true);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		});
 		param.setOnWrite((conn) -> {
 			System.out.println("write");
+			try {
+				conn.write("hello".getBytes());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		});
 		param.setOnRead((conn, data) -> {
 			System.out.println("read");
