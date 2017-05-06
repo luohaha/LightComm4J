@@ -22,7 +22,7 @@ public class IoWorker implements Runnable {
 	private Context context;
 	private IoHandler ioHandler;
 	private BlockingQueue<JobBean> jobBeans = new LinkedBlockingQueue<>();
-	
+
 	public IoWorker() throws IOException {
 		this.context = new Context();
 		this.selector = Selector.open();
@@ -36,17 +36,17 @@ public class IoWorker implements Runnable {
 				this.selector.select();
 				JobBean job = jobBeans.poll();
 				if (job != null) {
-					initSocketChannel(job);
+					try {
+						initSocketChannel(job);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				Set<SelectionKey> keys = this.selector.selectedKeys();
 				Iterator<SelectionKey> iterator = keys.iterator();
 				while (iterator.hasNext()) {
 					SelectionKey key = iterator.next();
-					try {
-						handle(key);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					handle(key);
 					iterator.remove();
 				}
 			} catch (IOException e) {
@@ -55,26 +55,38 @@ public class IoWorker implements Runnable {
 			}
 		}
 	}
-	
+
 	/**
 	 * handle read or write event
+	 * 
 	 * @param key
 	 * @throws IOException
 	 */
-	private void handle(SelectionKey key) throws IOException {
+	private void handle(SelectionKey key) {
 		SocketChannel channel = (SocketChannel) key.channel();
 		ContextBean bean = this.context.getChanToContextBean().get(channel);
 		if (key.isReadable()) {
 			if (bean.getParam().getOnRead() == null)
 				return;
-			ioHandler.readDataFromRemoteSite(channel, bean.getParam().getOnRead(), bean.getParam().getOnClose());
+			try {
+				ioHandler.readDataFromRemoteSite(channel, bean.getParam().getOnRead(), bean.getParam().getOnClose());
+			} catch (IOException e) {
+				if (bean.getParam().getOnReadError() != null)
+					bean.getParam().getOnReadError().onReadError(bean.getConnection(), e);
+			}
 		} else if (key.isWritable()) {
-			ioHandler.writeDataToRemoteSite(channel, bean.getParam().getOnWrite());
+			try {
+				ioHandler.writeDataToRemoteSite(channel, bean.getParam().getOnWrite());
+			} catch (IOException e) {
+				if (bean.getParam().getOnWriteError() != null)
+					bean.getParam().getOnWriteError().onWriteError(bean.getConnection(), e);
+			}
 		}
 	}
-	
+
 	/**
 	 * dispatch job to worker
+	 * 
 	 * @param job
 	 * @throws InterruptedException
 	 */
@@ -82,9 +94,10 @@ public class IoWorker implements Runnable {
 		this.jobBeans.put(job);
 		this.selector.wakeup();
 	}
-	
+
 	/**
 	 * init new job
+	 * 
 	 * @param jobBean
 	 * @throws IOException
 	 */
@@ -93,12 +106,12 @@ public class IoWorker implements Runnable {
 		Param param = jobBean.getParam();
 		channel.configureBlocking(false);
 		int ops = 0;
+		if (param == null)
+			System.out.println(">>>>>>>>>>>>>>>");
 		if (param.getOnRead() != null) {
 			ops |= SelectionKey.OP_READ;
 		}
-		if (param.getOnWrite() != null) {
-			ops |= SelectionKey.OP_WRITE;
-		}
+		ops |= SelectionKey.OP_WRITE;
 		channel.register(this.selector, ops);
 		// new connection
 		Connection connection = new Connection(this.context, channel, this.selector);
@@ -114,7 +127,7 @@ public class IoWorker implements Runnable {
 				param.getOnConnection().onConnection(connection);
 			}
 		}
-		
+
 	}
 
 }
