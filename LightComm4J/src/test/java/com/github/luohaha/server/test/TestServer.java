@@ -31,6 +31,15 @@ public class TestServer {
 					e.printStackTrace();
 				}
 			});
+			param.setOnReadError((conn, err) -> {
+				System.out.println(err.getMessage());
+			});
+			param.setOnWriteError((conn, err) -> {
+				System.out.println(err.getMessage());
+			});
+			param.setOnAcceptError(err -> {
+				System.out.println(err.getMessage());
+			});
 			LightCommServer server = new LightCommServer(param, 4);
 			server.start();
 		} catch (IOException e) {
