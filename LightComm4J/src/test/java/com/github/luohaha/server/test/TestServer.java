@@ -2,6 +2,7 @@ package com.github.luohaha.server.test;
 
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.luohaha.param.ServerParam;
 import com.github.luohaha.server.LightCommServer;
@@ -10,35 +11,20 @@ public class TestServer {
 
 	public static void main(String[] args) {
 		try {
+			AtomicInteger count = new AtomicInteger(0);
 			ServerParam param = new ServerParam("localhost", 8888);
 			param.setBacklog(128);
-			param.setOnAccept(conn -> {
-				System.out.println("accept!");
-				try {
-					SocketAddress address = conn.getRemoteAddress();
-					System.out.println(address.toString());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});
 			param.setOnRead((conn, data) -> {
-				System.out.println("read!");
-				System.out.println(new String(data));
 				try {
-					conn.write(String.valueOf(System.currentTimeMillis()).getBytes());
-					conn.close();
+					conn.write(String.valueOf(count.incrementAndGet()).getBytes());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			});
-			param.setOnWrite(conn -> {
-				System.out.println("write!");
 			});
 			param.setOnClose(conn -> {
-				System.out.println("close!");
 				try {
+					System.out.println(System.currentTimeMillis());
 					conn.doClose();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

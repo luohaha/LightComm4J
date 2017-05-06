@@ -3,6 +3,7 @@ package com.github.luohaha.server.test;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.luohaha.client.LightCommClient;
 import com.github.luohaha.param.ClientParam;
@@ -10,18 +11,9 @@ import com.github.luohaha.param.ClientParam;
 public class TestClient {
 
 	public static void main(String[] args) throws IOException {
+		AtomicInteger clientCount = new AtomicInteger(0);
 		ClientParam param = new ClientParam();
-		param.setOnConnection((conn) -> {
-			System.out.println("connect!");
-			try {
-				conn.setKeepAlive(true);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
 		param.setOnWrite((conn) -> {
-			System.out.println("write");
 			try {
 				conn.write("hello".getBytes());
 			} catch (Exception e) {
@@ -30,22 +22,27 @@ public class TestClient {
 			}
 		});
 		param.setOnRead((conn, data) -> {
-			System.out.println("read");
-			System.out.println(new String(data));
-		});
-		param.setOnClose((conn) -> {
-			System.out.println("close");
+			//System.out.println(new String(data));
+			clientCount.incrementAndGet();
 			try {
-				conn.close();
+				//System.out.println(System.currentTimeMillis());
+				conn.doClose();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		});
 		LightCommClient client = new LightCommClient(4);
-		client.connect("localhost", 8888, param);
-		client.connect("localhost", 8888, param);
-		client.connect("localhost", 8888, param);
-		client.connect("localhost", 8888, param);
+		int count = 500;
+		for (int i = 0; i < count; i++) {
+			client.connect("localhost", 8888, param);
+		}
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(count + " -> " + clientCount.get());
 	}
 }
