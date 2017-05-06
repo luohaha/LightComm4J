@@ -1,6 +1,7 @@
 package com.github.luohaha.param;
 
 import com.github.luohaha.inter.OnAccept;
+import com.github.luohaha.inter.OnAcceptError;
 import com.github.luohaha.inter.OnClose;
 import com.github.luohaha.inter.OnConnection;
 import com.github.luohaha.inter.OnRead;
@@ -11,6 +12,7 @@ public class ServerParam extends Param {
 	private int port;
 	private int backlog = 32;
 	private OnAccept onAccept;
+	private OnAcceptError onAcceptError;
 	
 	public ServerParam(String host, int port) {
 		// TODO Auto-generated constructor stub
@@ -51,6 +53,14 @@ public class ServerParam extends Param {
 	public OnAccept getOnAccept() {
 		// TODO Auto-generated method stub
 		return this.onAccept;
+	}
+
+	public OnAcceptError getOnAcceptError() {
+		return onAcceptError;
+	}
+
+	public void setOnAcceptError(OnAcceptError onAcceptError) {
+		this.onAcceptError = onAcceptError;
 	}
 
 	@Override

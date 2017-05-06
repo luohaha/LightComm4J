@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.github.luohaha.connection.Connection;
@@ -24,7 +26,7 @@ public class Connector implements Runnable {
 	private Selector selector;
 	private List<IoWorker> workers = new ArrayList<>();
 	private int workersIndex = 0;
-	private Map<SocketChannel, ClientParam> chanToParam = new HashMap<>();
+	private ConcurrentMap<SocketChannel, ClientParam> chanToParam = new ConcurrentHashMap<>();
 	private BlockingQueue<SocketChannel> chanQueue = new LinkedBlockingQueue<>();
 	
 	public Connector() throws IOException {
@@ -85,7 +87,10 @@ public class Connector implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				
+				ClientParam clientParam = this.chanToParam.get(channel);
+				if (clientParam.getOnConnError() != null) {
+					clientParam.getOnConnError().onConnError(e);
+				}
 			}
 		}
 	}

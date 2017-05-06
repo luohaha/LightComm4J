@@ -26,12 +26,12 @@ public class Accepter implements Runnable {
 		this.channel = ServerSocketChannel.open();
 		this.channel.configureBlocking(false);
 		this.param = param;
-		this.channel.socket().bind(new InetSocketAddress(param.getHost(), param.getPort()),
-				this.param.getBacklog());
+		this.channel.socket().bind(new InetSocketAddress(param.getHost(), param.getPort()), this.param.getBacklog());
 	}
-	
+
 	/**
 	 * add worker thread
+	 * 
 	 * @param worker
 	 */
 	public void addIoWorker(IoWorker worker) {
@@ -49,7 +49,7 @@ public class Accepter implements Runnable {
 					SelectionKey key = iterator.next();
 					try {
 						handle(key);
-					} catch (Exception e) {
+					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					iterator.remove();
@@ -62,16 +62,22 @@ public class Accepter implements Runnable {
 		}
 	}
 
-	private void handle(SelectionKey key) throws IOException, InterruptedException {
+	private void handle(SelectionKey key) throws InterruptedException {
 		if (key.isAcceptable()) {
 			/*
 			 * accept
 			 */
 			ServerSocketChannel server = (ServerSocketChannel) key.channel();
-			SocketChannel channel = server.accept();
-			IoWorker worker = workers.get(workerIndex);
-			worker.dispatch(new JobBean(channel, this.param));
-			workerIndex = (workerIndex + 1) % workers.size();
+			try {
+				SocketChannel channel = server.accept();
+				IoWorker worker = workers.get(workerIndex);
+				worker.dispatch(new JobBean(channel, this.param));
+				workerIndex = (workerIndex + 1) % workers.size();
+			} catch (IOException e) {
+				if (param.getOnAcceptError() != null) {
+					param.getOnAcceptError().onAcceptError(e);
+				}
+			}
 		}
 	}
 

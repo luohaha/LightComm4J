@@ -38,9 +38,9 @@ public class IoHandler {
 	public void readDataFromRemoteSite(SocketChannel channel, OnRead onRead, OnClose onClose) throws IOException {
 		// store current data
 		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+		ContextBean bean = this.context.getChanToContextBean().get(channel);
 		// read from remote side
 		int count = channel.read(buffer);
-		ContextBean bean = this.context.getChanToContextBean().get(channel);
 		if (count >= 0) {
 			// set buffer's position to 0
 			buffer.flip();
