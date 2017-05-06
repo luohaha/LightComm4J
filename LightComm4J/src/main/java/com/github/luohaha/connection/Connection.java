@@ -53,7 +53,7 @@ public class Connection implements Conn {
 	 * 
 	 * @throws IOException
 	 */
-	public synchronized void close() throws IOException {
+	public void close() throws IOException {
 		this.readyToClose = true;
 		if (this.readyToWrite.isEmpty()) {
 			doClose();
