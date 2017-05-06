@@ -1,8 +1,22 @@
 # LightComm4J
+
 Yet another asynchronous network library for java
 
 ## Install
 
+>Maven
+
+```java
+<dependency>
+  <groupId>com.github.luohaha</groupId>
+  <artifactId>LightComm4J</artifactId>
+  <version>0.0.4-SNAPSHOT</version>
+</dependency>
+```
+
+>Download jar
+
+[download](/com/github/luohaha/LightComm4J/0.0.4-SNAPSHOT/LightComm4J-0.0.4-20170506.094741-7.jar)
 
 ## How to use
 
@@ -25,6 +39,15 @@ param.setOnWrite(conn -> {
 });
 param.setOnClose(conn -> {
 	System.out.println("close!");
+});
+param.setOnReadError((conn, err) -> {
+	System.out.println(err.getMessage());
+});
+param.setOnWriteError((conn, err) -> {
+	System.out.println(err.getMessage());
+});
+param.setOnAcceptError(err -> {
+	System.out.println(err.getMessage());
 });
 ```
 
@@ -56,6 +79,15 @@ param.setOnRead((conn, data) -> {
 });
 param.setOnClose((conn) -> {
 	System.out.println("close");
+});
+param.setOnReadError((conn, err) -> {
+	System.out.println(err.getMessage());
+});
+param.setOnWriteError((conn, err) -> {
+	System.out.println(err.getMessage());
+});
+param.setOnConnError(err -> {
+	System.out.println(err.getMessage());
 });
 ```
 
@@ -112,6 +144,38 @@ public interface OnWrite {
 }
 ```
 
+* `OnConnError`
+
+```java
+public interface OnConnError {
+	public void onConnError(Exception e);
+}
+```
+
+* `OnAcceptError`
+
+```java
+public interface OnAcceptError {
+	public void onAcceptError(Exception e);
+}
+```
+
+* `OnReadError`
+
+```java
+public interface OnReadError {
+	public void onReadError(Conn conn, Exception e);
+}
+```
+
+* `OnWriteError`
+
+```java
+public interface OnWriteError {
+	public void onWriteError(Conn conn, Exception e);
+}
+```
+
 * `Conn`
 
 We can send message, close connection and set tcp options by `Conn`.
@@ -146,4 +210,126 @@ public interface Conn {
 	public boolean getReUseAddr() throws IOException;
 	public boolean getNoDelay() throws IOException;
 }
+```
+
+## Example
+
+we use `LightComm4J` to build a simple chatroom.
+
+* server-side
+
+```java
+public class ChatRoomServer {
+	public static void main(String[] args) {
+		ServerParam param = new ServerParam("localhost", 8888);
+		Set<Conn> conns = new HashSet<>();
+		param.setBacklog(128);
+		param.setOnAccept(conn -> {
+			try {
+				String m = conn.getRemoteAddress().toString() + " " + "is online!";
+				conns.add(conn);
+				conns.forEach(c -> {
+					try {
+						c.write(m.getBytes());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		param.setOnRead((conn, msg) -> {
+			try {
+				String m = conn.getRemoteAddress().toString() + " : " + new String(msg);
+				conns.forEach(c -> {
+					try {
+						c.write(m.getBytes());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		param.setOnClose(conn -> {
+			try {
+				conns.remove(conn);
+				String m = conn.getRemoteAddress().toString() + " " + "is offline!";
+				conns.forEach(c -> {
+					try {
+						c.write(m.getBytes());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		param.setOnReadError((conn, err) -> {
+			System.out.println(err.getMessage());
+		});
+		param.setOnWriteError((conn, err) -> {
+			System.out.println(err.getMessage());
+		});
+		param.setOnAcceptError(err -> {
+			System.out.println(err.getMessage());
+		});
+		
+		LightCommServer server = new LightCommServer(param, 4);
+		try {
+			server.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+```
+
+* client-side
+
+```java
+public class ChatRoomClient {
+	public static void main(String[] args) {
+		ClientParam param = new ClientParam();
+		param.setOnConnection(conn -> {
+			new Thread(() -> {
+				Scanner scanner = new Scanner(System.in);
+				while (scanner.hasNext()) {
+					String msg = scanner.nextLine();
+					try {
+						conn.write(msg.getBytes());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		});
+		param.setOnRead((conn, msg) -> {
+			System.out.println("[chatroom] " + new String(msg));
+		});
+		param.setOnClose(conn -> {
+			System.out.println("[chatroom] " + "chatroom close!");
+		});
+		try {
+			LightCommClient client = new LightCommClient(4);
+			client.connect("localhost", 8888, param);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
 ```
