@@ -32,8 +32,17 @@ public class TestClient {
 				e.printStackTrace();
 			}
 		});
+		param.setOnReadError((conn, err) -> {
+			System.out.println(err.getMessage());
+		});
+		param.setOnWriteError((conn, err) -> {
+			System.out.println(err.getMessage());
+		});
+		param.setOnConnError(err -> {
+			System.out.println(err.getMessage());
+		});
 		LightCommClient client = new LightCommClient(4);
-		int count = 500;
+		int count = 5000;
 		for (int i = 0; i < count; i++) {
 			client.connect("localhost", 8888, param);
 		}

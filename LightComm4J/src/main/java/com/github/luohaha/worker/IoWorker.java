@@ -73,6 +73,11 @@ public class IoWorker implements Runnable {
 			} catch (IOException e) {
 				if (bean.getParam().getOnReadError() != null)
 					bean.getParam().getOnReadError().onReadError(bean.getConnection(), e);
+				this.context.removeContextByChan(channel);
+				try {
+					channel.close();
+				} catch (IOException e1) {
+				}
 			}
 		} else if (key.isWritable()) {
 			try {
@@ -80,6 +85,11 @@ public class IoWorker implements Runnable {
 			} catch (IOException e) {
 				if (bean.getParam().getOnWriteError() != null)
 					bean.getParam().getOnWriteError().onWriteError(bean.getConnection(), e);
+				this.context.removeContextByChan(channel);
+				try {
+					channel.close();
+				} catch (IOException e1) {
+				}
 			}
 		}
 	}

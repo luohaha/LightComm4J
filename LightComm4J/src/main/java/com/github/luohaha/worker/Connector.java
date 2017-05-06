@@ -91,6 +91,11 @@ public class Connector implements Runnable {
 				if (clientParam.getOnConnError() != null) {
 					clientParam.getOnConnError().onConnError(e);
 				}
+				this.chanToParam.remove(channel);
+				try {
+					channel.close();
+				} catch (IOException e1) {
+				}
 			}
 		}
 	}
