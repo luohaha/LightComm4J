@@ -16,7 +16,7 @@ Yet another asynchronous network library for java
 
 >Download jar
 
-[download](https://oss.sonatype.org/service/local/repositories/releases/content/com/github/luohaha/jlitespider/0.4.3/jlitespider-0.4.3.jar)
+[download](https://oss.sonatype.org/service/local/repositories/snapshots/content/com/github/luohaha/LightComm4J/0.0.4-SNAPSHOT/LightComm4J-0.0.4-20170506.094741-7.jar)
 
 ## How to use
 
