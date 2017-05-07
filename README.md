@@ -51,7 +51,7 @@ param.setOnAcceptError(err -> {
 });
 ```
 
-`OnAccept` will be called when accepter return a new connection. `OnRead` will be called when socket's recv buffer isn't empty. `OnWrite` will be called at first time when socket's send buffer isn't empty and it will be call just once. When remote side client close socket, then `OnClose` be called, but if we close server side socket first, this function will not be called forever.
+`OnAccept` will be called when accepter return a new connection. `OnRead` will be called when socket's recv buffer isn't empty. `OnWrite` will be called at first time when socket's send buffer isn't empty and it will be call just once. When remote side close socket, then `OnClose` be called, but if we close server side socket first, this function will not be called forever.
 
 Finally, we can start our server using 'ServerParam' and need to decide the size of io thread pool.
 
