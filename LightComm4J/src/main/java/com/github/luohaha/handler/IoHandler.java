@@ -7,6 +7,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Queue;
+import java.util.logging.Logger;
 
 import com.github.luohaha.connection.Connection;
 import com.github.luohaha.connection.DataBag;
@@ -17,6 +18,7 @@ import com.github.luohaha.inter.OnRead;
 import com.github.luohaha.inter.OnWrite;
 
 public class IoHandler {
+	private Logger logger = Logger.getLogger("LightComm4J");
 	private Context context;
 	private Selector selector;
 	private static final int BUFFER_SIZE = 1024;
@@ -60,7 +62,12 @@ public class IoHandler {
 			}
 		} else {
 			// read end
-			closeRead(channel);
+			try {
+				closeRead(channel);
+			} catch (ClosedChannelException e) {
+				this.logger.warning("[Read Event] : " + e.toString());
+				throw new IOException();
+			}
 			if (onClose != null)
 				onClose.onClose(bean.getConnection());
 		}
@@ -96,7 +103,12 @@ public class IoHandler {
 
 		// nothing to write
 		if (connection.getReadyToWrite().isEmpty()) {
-			closeWrite(channel);
+			try {
+				closeWrite(channel);
+			} catch (ClosedChannelException e) {
+				this.logger.warning("[Write Event] : " + e.toString());
+				throw new IOException();
+			}
 			if (connection.isReadyToClose()) {
 				connection.doClose();
 			}

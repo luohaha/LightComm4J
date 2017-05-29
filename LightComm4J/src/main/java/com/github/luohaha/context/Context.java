@@ -1,29 +1,20 @@
 package com.github.luohaha.context;
 
-import java.beans.beancontext.BeanContext;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 
 import com.github.luohaha.connection.Connection;
 import com.github.luohaha.connection.DataBag;
-import com.github.luohaha.inter.OnClose;
-import com.github.luohaha.inter.OnRead;
 import com.github.luohaha.param.Param;
 
 public class Context {
 	
 	private Map<SocketChannel, ContextBean> chanToContextBean = new HashMap<>();
 
-	public Context() throws IOException {
-		// TODO Auto-generated constructor stub
+	public Context() {
+	
 	}
 
 	public Map<SocketChannel, ContextBean> getChanToContextBean() {

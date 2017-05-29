@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 
 import com.github.luohaha.connection.Connection;
@@ -41,11 +42,13 @@ public class LightCommServer {
 	public void start() throws IOException {
 		Accepter accepter = new Accepter(this.param);
 		for (int i = 0; i < ioThreadPoolSize; i++) {
-			IoWorker ioWorker = new IoWorker();
+			IoWorker ioWorker = new IoWorker(i);
 			accepter.addIoWorker(ioWorker);
 			new Thread(ioWorker).start();
+			this.param.getLogger().info("[IoWorker-" + i + "]" + " start...");
 		}
 		new Thread(accepter).start();
+		this.param.getLogger().info("[Accepter] start...");
 	}
 	
 }

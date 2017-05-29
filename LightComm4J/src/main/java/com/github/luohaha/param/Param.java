@@ -1,15 +1,23 @@
 package com.github.luohaha.param;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.github.luohaha.inter.OnAccept;
 import com.github.luohaha.inter.OnClose;
-import com.github.luohaha.inter.OnConnError;
-import com.github.luohaha.inter.OnConnection;
+import com.github.luohaha.inter.OnConnectError;
+import com.github.luohaha.inter.OnConnect;
 import com.github.luohaha.inter.OnRead;
 import com.github.luohaha.inter.OnReadError;
 import com.github.luohaha.inter.OnWrite;
 import com.github.luohaha.inter.OnWriteError;
 
 public abstract class Param {
+
+	// logger
+	private Logger logger = Logger.getLogger("LightComm4J");
 
 	private OnRead onRead;
 	private OnReadError onReadError;
@@ -48,7 +56,18 @@ public abstract class Param {
 		this.onClose = onClose;
 	}
 	
+	public void addLogHandler(Handler handler) {
+		this.logger.addHandler(handler);
+	}
+	
+	public void setLogLevel(Level level) {
+		this.logger.setLevel(level);
+	}
+	
+	public Logger getLogger() {
+		return logger;
+	}
 	public abstract OnAccept getOnAccept();
-	public abstract OnConnection getOnConnection();
+	public abstract OnConnect getOnConnection();
 	public abstract boolean isServerParam();
 }

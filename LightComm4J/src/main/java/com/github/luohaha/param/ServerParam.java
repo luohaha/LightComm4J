@@ -3,7 +3,7 @@ package com.github.luohaha.param;
 import com.github.luohaha.inter.OnAccept;
 import com.github.luohaha.inter.OnAcceptError;
 import com.github.luohaha.inter.OnClose;
-import com.github.luohaha.inter.OnConnection;
+import com.github.luohaha.inter.OnConnect;
 import com.github.luohaha.inter.OnRead;
 import com.github.luohaha.inter.OnWrite;
 
@@ -15,7 +15,6 @@ public class ServerParam extends Param {
 	private OnAcceptError onAcceptError;
 	
 	public ServerParam(String host, int port) {
-		// TODO Auto-generated constructor stub
 		this.host = host;
 		this.port = port;
 	}
@@ -51,7 +50,6 @@ public class ServerParam extends Param {
 
 	@Override
 	public OnAccept getOnAccept() {
-		// TODO Auto-generated method stub
 		return this.onAccept;
 	}
 
@@ -64,14 +62,12 @@ public class ServerParam extends Param {
 	}
 
 	@Override
-	public OnConnection getOnConnection() {
-		// TODO Auto-generated method stub
+	public OnConnect getOnConnection() {
 		return null;
 	}
 
 	@Override
 	public boolean isServerParam() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	

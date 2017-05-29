@@ -2,49 +2,50 @@ package com.github.luohaha.param;
 
 import com.github.luohaha.inter.OnAccept;
 import com.github.luohaha.inter.OnClose;
-import com.github.luohaha.inter.OnConnError;
-import com.github.luohaha.inter.OnConnection;
+import com.github.luohaha.inter.OnConnectError;
+import com.github.luohaha.inter.OnConnect;
 import com.github.luohaha.inter.OnRead;
 import com.github.luohaha.inter.OnWrite;
 
 public class ClientParam extends Param {
-	private OnConnection onConnection;
-	private OnConnError onConnError;
+	private OnConnect onConnect;
+	private OnConnectError onConnectError;
 	
 	public ClientParam() {
-		// TODO Auto-generated constructor stub
+		// 
 	}
 
-	public OnConnError getOnConnError() {
-		return onConnError;
+	public OnConnect getOnConnect() {
+		return onConnect;
+	}
+
+	public void setOnConnect(OnConnect onConnect) {
+		this.onConnect = onConnect;
+	}
+
+	public OnConnectError getOnConnectError() {
+		return onConnectError;
+	}
+
+	public void setOnConnectError(OnConnectError onConnectError) {
+		this.onConnectError = onConnectError;
 	}
 
 
-	public void setOnConnError(OnConnError onConnError) {
-		this.onConnError = onConnError;
-	}
-
-
-	public void setOnConnection(OnConnection onConnection) {
-		this.onConnection = onConnection;
-	}
 
 	@Override
 	public OnAccept getOnAccept() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public OnConnection getOnConnection() {
-		// TODO Auto-generated method stub
-		return this.onConnection;
+	public OnConnect getOnConnection() {
+		return this.onConnect;
 	}
 
 
 	@Override
 	public boolean isServerParam() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

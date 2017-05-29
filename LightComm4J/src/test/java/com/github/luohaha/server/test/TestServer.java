@@ -3,6 +3,7 @@ package com.github.luohaha.server.test;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 import com.github.luohaha.param.ServerParam;
 import com.github.luohaha.server.LightCommServer;
@@ -13,6 +14,7 @@ public class TestServer {
 		try {
 			AtomicInteger count = new AtomicInteger(0);
 			ServerParam param = new ServerParam("localhost", 8888);
+			param.setLogLevel(Level.WARNING);
 			param.setBacklog(128);
 			param.setOnRead((conn, data) -> {
 				try {
@@ -24,7 +26,7 @@ public class TestServer {
 			});
 			param.setOnClose(conn -> {
 				try {
-					System.out.println(System.currentTimeMillis());
+					//System.out.println(System.currentTimeMillis());
 					conn.doClose();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

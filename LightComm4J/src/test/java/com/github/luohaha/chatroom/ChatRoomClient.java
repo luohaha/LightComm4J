@@ -2,6 +2,7 @@ package com.github.luohaha.chatroom;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 import com.github.luohaha.client.LightCommClient;
 import com.github.luohaha.param.ClientParam;
@@ -9,7 +10,7 @@ import com.github.luohaha.param.ClientParam;
 public class ChatRoomClient {
 	public static void main(String[] args) {
 		ClientParam param = new ClientParam();
-		param.setOnConnection(conn -> {
+		param.setOnConnect(conn -> {
 			new Thread(() -> {
 				Scanner scanner = new Scanner(System.in);
 				while (scanner.hasNext()) {

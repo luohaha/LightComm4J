@@ -145,6 +145,7 @@ public class DataBag {
 		this.tmpBuffer = newBuffer;
 	}
 	
+	/*
 	public static void main(String[] args) {
 		ByteBuffer buffer = ByteBuffer.allocate(16);
 		buffer.putInt(45);
@@ -155,5 +156,5 @@ public class DataBag {
 		byte[] res = new byte[12];
 		buffer.get(res);
 		
-	}
+	}*/
 }

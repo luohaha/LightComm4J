@@ -1,8 +1,5 @@
 package com.github.luohaha.context;
 
-import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
 
 import com.github.luohaha.connection.Connection;

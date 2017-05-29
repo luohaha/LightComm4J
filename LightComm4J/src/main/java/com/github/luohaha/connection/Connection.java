@@ -11,6 +11,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 import com.github.luohaha.context.Context;
 import com.github.luohaha.context.ContextBean;
@@ -24,6 +25,7 @@ public class Connection implements Conn {
 	// write function could be call just once
 	private boolean onWriteCalled = false;
 	private boolean readyToClose = false;
+	private Logger logger = Logger.getLogger("LightComm4J");
 
 	public Connection(Context context, SocketChannel channel, Selector selector) {
 		super();
@@ -53,7 +55,7 @@ public class Connection implements Conn {
 	 * 
 	 * @throws IOException
 	 */
-	public void close() throws IOException {
+	public void close() {
 		this.readyToClose = true;
 		if (this.readyToWrite.isEmpty()) {
 			doClose();
@@ -65,9 +67,13 @@ public class Connection implements Conn {
 	 * 
 	 * @throws IOException
 	 */
-	public void doClose() throws IOException {
+	public void doClose() {
 		this.context.removeContextByChan(channel);
-		this.channel.close();
+		try {
+			this.channel.close();
+		} catch (IOException e) {
+			this.logger.warning("[Close Event] : " + e.toString());
+		}
 	}
 
 	public BlockingQueue<ByteBuffer> getReadyToWrite() {
@@ -92,13 +98,11 @@ public class Connection implements Conn {
 
 	@Override
 	public SocketAddress getLocalAddress() throws IOException {
-		// TODO Auto-generated method stub
 		return this.channel.getLocalAddress();
 	}
 
 	@Override
 	public SocketAddress getRemoteAddress() throws IOException {
-		// TODO Auto-generated method stub
 		return this.channel.getRemoteAddress();
 	}
 
