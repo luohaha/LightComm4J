@@ -40,7 +40,7 @@ public class LightCommServer {
 	 * @throws IOException
 	 * IOException
 	 */
-	public void start() throws IOException {
+	public void start() {
 		Accepter accepter = new Accepter(this.param);
 		for (int i = 0; i < ioThreadPoolSize; i++) {
 			IoWorker ioWorker = new IoWorker(i);

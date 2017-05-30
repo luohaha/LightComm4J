@@ -27,7 +27,7 @@ public class LightCommClient {
 	private int ioThreadPoolSize = 1;
 	private Logger logger = Logger.getLogger("LightComm4J");
 	
-	public LightCommClient(int ioThreadPoolSize) throws IOException {
+	public LightCommClient(int ioThreadPoolSize) {
 		
 		this.ioThreadPoolSize = ioThreadPoolSize;
 		this.connector = new Connector();
@@ -41,7 +41,7 @@ public class LightCommClient {
 		this.logger.info("[Connector]" + " start...");
 	}
 
-	public void connect(String host, int port, ClientParam param) throws IOException {
+	public void connect(String host, int port, ClientParam param) {
 		this.connector.connect(host, port, param);
 	}
 	
