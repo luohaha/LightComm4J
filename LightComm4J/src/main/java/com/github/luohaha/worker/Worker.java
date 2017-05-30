@@ -10,8 +10,10 @@ public class Worker {
 	public Logger logger = Logger.getLogger("LightComm4J");
 	/**
 	 * open selector
-	 * 
+	 * @param msg
+	 * msg
 	 * @return
+	 * selector
 	 */
 	public Selector openSelector(String msg) {
 		Selector selector;
@@ -28,8 +30,10 @@ public class Worker {
 	
 	/**
 	 * open non-blocking socket channel
-	 * 
+	 * @param msg
+	 * message
 	 * @return
+	 * SocketChannel
 	 */
 	public SocketChannel openSocketChannelNonBlocking(String msg) {
 		SocketChannel socketChannel;
@@ -47,7 +51,9 @@ public class Worker {
 	/**
 	 * open server socket channel
 	 * @param msg
+	 * message
 	 * @return
+	 * ServerSocketChannel
 	 */
 	public ServerSocketChannel openServerSocketChannelNonBlocking(String msg) {
 		ServerSocketChannel serverSocketChannel;

@@ -28,8 +28,13 @@ public class Context {
 	/**
 	 * init this channel's context
 	 * @param channel
+	 * channel
 	 * @param connection
+	 * connection
 	 * @param ops
+	 * operations
+	 * @param param
+	 * param
 	 */
 	public void initContext(SocketChannel channel, Connection connection, int ops, Param param) {
 		ContextBean bean = new ContextBean(connection, new ArrayDeque<>(), new DataBag(), ops, param);
@@ -39,6 +44,7 @@ public class Context {
 	/**
 	 * remove this channel's context
 	 * @param channel
+	 * channel
 	 */
 	public void removeContextByChan(SocketChannel channel) {
 		this.chanToContextBean.remove(channel);

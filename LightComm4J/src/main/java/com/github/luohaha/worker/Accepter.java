@@ -32,6 +32,7 @@ public class Accepter extends Worker implements Runnable {
 	 * add worker thread
 	 * 
 	 * @param worker
+	 * worker
 	 */
 	public void addIoWorker(IoWorker worker) {
 		workers.add(worker);
@@ -90,7 +91,9 @@ public class Accepter extends Worker implements Runnable {
 	 * bind address
 	 * 
 	 * @param serverSocketChannel
+	 * serverSocketChannel
 	 * @param serverParam
+	 * serverParam
 	 */
 	private void bindAddress(ServerSocketChannel serverSocketChannel, ServerParam serverParam) {
 		do {

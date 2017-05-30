@@ -61,7 +61,9 @@ public class IoWorker extends Worker implements Runnable {
 	 * handle read or write event
 	 * 
 	 * @param key
+	 * key
 	 * @throws IOException
+	 * IOException
 	 */
 	private void handle(SelectionKey key) {
 		SocketChannel channel = (SocketChannel) key.channel();
@@ -107,6 +109,7 @@ public class IoWorker extends Worker implements Runnable {
 	 * dispatch job to worker
 	 * 
 	 * @param job
+	 * job
 	 */
 	public void dispatch(JobBean job) {
 		this.jobBeans.add(job);
@@ -117,7 +120,9 @@ public class IoWorker extends Worker implements Runnable {
 	 * init new job
 	 * 
 	 * @param jobBean
+	 * jobBean
 	 * @throws IOException
+	 * IOException
 	 */
 	private void initSocketChannel(JobBean jobBean) {
 		SocketChannel channel = jobBean.getChannel();

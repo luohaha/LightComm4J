@@ -39,9 +39,11 @@ public class Connector extends Worker implements Runnable {
 	 * send msg to remote site
 	 * 
 	 * @param host
+	 * host
 	 * @param port
-	 * @param msg
-	 * @throws IOException
+	 * port
+	 * @param param
+	 * param
 	 */
 	public void connect(String host, int port, ClientParam param) {
 		// build socket channel
@@ -109,6 +111,7 @@ public class Connector extends Worker implements Runnable {
 	 * add io worker
 	 * 
 	 * @param worker
+	 * worker
 	 */
 	public void addWorker(IoWorker worker) {
 		this.workers.add(worker);
@@ -118,8 +121,11 @@ public class Connector extends Worker implements Runnable {
 	 * connect to address
 	 * 
 	 * @param socketChannel
+	 * socketChannel
 	 * @param address
+	 * address
 	 * @param param
+	 * param
 	 */
 	private void connectToAddress(SocketChannel socketChannel, String host, int port, ClientParam param) {
 		SocketAddress address = new InetSocketAddress(host, port);

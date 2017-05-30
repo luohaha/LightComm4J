@@ -22,7 +22,9 @@ public class DataBag {
 	/**
 	 * read data from byte buffer
 	 * @param buffer
+	 * read from this buffer
 	 * @return
+	 * buffer's current position
 	 */
 	public int readFrom(ByteBuffer buffer) {
 		int start = buffer.position();
@@ -85,6 +87,7 @@ public class DataBag {
 	/**
 	 * get bytebuffer from tmpBuffer, when it finish
 	 * @return
+	 * buffer
 	 */
 	public ByteBuffer getByteBuffer() {
 		if (isFinish()) {
@@ -100,6 +103,7 @@ public class DataBag {
 	/**
 	 * get bytes from tmpBuffer, when it finish
 	 * @return
+	 * return byte array from tmpBuffer
 	 */
 	public byte[] getBytes() {
 		if (!isFinish())
@@ -114,7 +118,9 @@ public class DataBag {
 	/**
 	 * byte转int，采用小端字节序
 	 * @param data
+	 * byte
 	 * @return
+	 * int
 	 */
 	private int byteToInteger(byte[] data) {
 		return byteToIntegerFromPos(data, 0);
@@ -123,8 +129,11 @@ public class DataBag {
 	/**
 	 * byte转int，采用小端字节序，从start位置开始
 	 * @param data
+	 * byte
 	 * @param start
+	 * start position
 	 * @return
+	 * int
 	 */
 	private int byteToIntegerFromPos(byte[] data, int start) {
 		return data[start + 3] & 0xff |

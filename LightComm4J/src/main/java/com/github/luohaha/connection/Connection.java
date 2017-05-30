@@ -53,7 +53,6 @@ public class Connection implements Conn {
 	/**
 	 * set close flag
 	 * 
-	 * @throws IOException
 	 */
 	public void close() {
 		this.readyToClose = true;
@@ -64,8 +63,6 @@ public class Connection implements Conn {
 
 	/**
 	 * close channel
-	 * 
-	 * @throws IOException
 	 */
 	public void doClose() {
 		this.context.removeContextByChan(channel);
@@ -117,7 +114,9 @@ public class Connection implements Conn {
 	 * get send buffer' size
 	 * 
 	 * @return
+	 * SO_SNDBUF
 	 * @throws IOException
+	 * IOException
 	 */
 	public int getSendBuffer() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_SNDBUF);
@@ -134,7 +133,9 @@ public class Connection implements Conn {
 	 * get recv buffer's size
 	 * 
 	 * @return
+	 * SO_RCVBUF
 	 * @throws IOException
+	 * IOException
 	 */
 	public int getRecvBuffer() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_RCVBUF);
@@ -151,7 +152,9 @@ public class Connection implements Conn {
 	 * get keep alive
 	 * 
 	 * @return
+	 * SO_KEEPALIVE
 	 * @throws IOException
+	 * IOException
 	 */
 	public boolean getKeepAlive() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_KEEPALIVE);
@@ -168,7 +171,9 @@ public class Connection implements Conn {
 	 * get reuse address
 	 * 
 	 * @return
+	 * SO_REUSEADDR
 	 * @throws IOException
+	 * IOException
 	 */
 	public boolean getReUseAddr() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.SO_REUSEADDR);
@@ -185,7 +190,9 @@ public class Connection implements Conn {
 	 * get no delay
 	 * 
 	 * @return
+	 * TCP_NODELAY
 	 * @throws IOException
+	 * IOException
 	 */
 	public boolean getNoDelay() throws IOException {
 		return this.channel.getOption(StandardSocketOptions.TCP_NODELAY);

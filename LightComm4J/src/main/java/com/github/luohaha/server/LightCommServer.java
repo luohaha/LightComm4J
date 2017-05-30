@@ -38,6 +38,7 @@ public class LightCommServer {
 	/**
 	 * start server
 	 * @throws IOException
+	 * IOException
 	 */
 	public void start() throws IOException {
 		Accepter accepter = new Accepter(this.param);

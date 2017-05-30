@@ -33,9 +33,13 @@ public class IoHandler {
 	 * read data from remote site by channel
 	 * 
 	 * @param channel
+	 * channel
 	 * @param onRead
+	 * onRead
 	 * @param onClose
+	 * onClose
 	 * @throws IOException
+	 * ioexception
 	 */
 	public void readDataFromRemoteSite(SocketChannel channel, OnRead onRead, OnClose onClose) throws IOException {
 		// store current data
@@ -77,8 +81,11 @@ public class IoHandler {
 	 * write data to remote site
 	 * 
 	 * @param channel
+	 * channnel
 	 * @param onWrite
+	 * onWrite
 	 * @throws IOException
+	 * IOException
 	 */
 	public void writeDataToRemoteSite(SocketChannel channel, OnWrite onWrite) throws IOException {
 		ContextBean bean = this.context.getChanToContextBean().get(channel);
@@ -120,7 +127,9 @@ public class IoHandler {
 	 * close write event
 	 * 
 	 * @param channel
+	 * channel
 	 * @throws ClosedChannelException
+	 * ClosedChannelException
 	 */
 	private void closeWrite(SocketChannel channel) throws ClosedChannelException {
 		closeOps(channel, SelectionKey.OP_WRITE);
@@ -130,7 +139,9 @@ public class IoHandler {
 	 * close read event
 	 * 
 	 * @param channel
+	 * channel
 	 * @throws ClosedChannelException
+	 * ClosedChannelException
 	 */
 	private void closeRead(SocketChannel channel) throws ClosedChannelException {
 		closeOps(channel, SelectionKey.OP_READ);
@@ -140,8 +151,11 @@ public class IoHandler {
 	 * close some operations
 	 * 
 	 * @param channel
+	 * channel
 	 * @param opsToClose
+	 * opsToClose
 	 * @throws ClosedChannelException
+	 * ClosedChannelException
 	 */
 	private void closeOps(SocketChannel channel, int opsToClose) throws ClosedChannelException {
 		ContextBean bean = this.context.getChanToContextBean().get(channel);
