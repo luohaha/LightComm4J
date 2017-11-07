@@ -10,13 +10,13 @@ Yet another asynchronous network library for java
 <dependency>
   <groupId>com.github.luohaha</groupId>
   <artifactId>LightComm4J</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
 >Download jar
 
-[download](https://oss.sonatype.org/service/local/repositories/snapshots/content/com/github/luohaha/LightComm4J/0.0.4-SNAPSHOT/LightComm4J-0.0.4-20170506.094741-7.jar)
+[download](https://oss.sonatype.org/service/local/repositories/releases/content/com/github/luohaha/LightComm4J/1.0.0/LightComm4J-1.0.0.jar)
 
 ## How to use
 
@@ -212,6 +212,39 @@ public interface Conn {
 }
 ```
 
+## How to use rpc
+
+* server-side  
+
+First, we need to create `RpcServer`, set host address and port. Then we need to add remote call function's name and `IRpcFunction`. Finally, start server.
+
+```java
+RpcServer rpcServer = new RpcServer("localhost", 8888);
+rpcServer.add("add", new AddRpc());
+rpcServer.start();
+```
+
+```java
+public class AddRpc implements IRpcFunction{
+    @Override
+    public Object rpcCall(String function, List<Object> params) {
+        int res = (int)params.get(0) + (int)params.get(1);
+        return res;
+    }
+}
+```
+
+* client-side
+
+First, we need to create `RpcClient`, then start it. Then we can use `remote` and `call` to finish remote process call.
+
+```java
+RpcClient client = new RpcClient();
+// need to start client, before remote call.
+client.start();
+client.remote("localhost", 8888).call("add", 1, 2);
+```
+
 ## Example
 
 we use `LightComm4J` to build a simple chatroom.
@@ -332,4 +365,52 @@ public class ChatRoomClient {
 	}
 }
 
+```
+
+## Example for RPC
+
+* server
+
+```java
+public class RpcServerTest {
+    public static void main(String[] args) {
+        RpcServer rpcServer = new RpcServer("localhost", 8888);
+        rpcServer.add("add", new AddRpc());
+        rpcServer.start();
+    }
+}
+```
+
+```java
+public class AddRpc implements IRpcFunction{
+    @Override
+    public Object rpcCall(String function, List<Object> params) {
+        int res = (int)params.get(0) + (int)params.get(1);
+        return res;
+    }
+}
+```
+
+* client
+
+```java
+public class RpcClientTest {
+
+    private static RpcClient client = new RpcClient();
+
+    public static int add(int a, int b) {
+        return a + b;
+    }
+
+    public static int addRpc(int a, int b) {
+        return (int)client.remote("localhost", 8888).call("add", a, b);
+    }
+
+    public static void main(String[] args) {
+        client.start();
+        System.out.println("1 + 2 = " + add(1, 2));
+        System.out.println("1 + 2 = " + addRpc(1, 2));
+    }
+
+}
 ```
