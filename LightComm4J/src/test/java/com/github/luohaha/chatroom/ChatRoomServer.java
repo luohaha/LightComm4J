@@ -75,11 +75,6 @@ public class ChatRoomServer {
 		});
 		
 		LightCommServer server = new LightCommServer(param, 4);
-		try {
-			server.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		server.start();
 	}
 }

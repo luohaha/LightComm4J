@@ -30,12 +30,7 @@ public class ChatRoomClient {
 		param.setOnClose(conn -> {
 			System.out.println("[chatroom] " + "chatroom close!");
 		});
-		try {
-			LightCommClient client = new LightCommClient(4);
-			client.connect("localhost", 8888, param);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		LightCommClient client = new LightCommClient(4);
+		client.connect("localhost", 8888, param);
 	}
 }

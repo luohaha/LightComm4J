@@ -11,7 +11,6 @@ import com.github.luohaha.server.LightCommServer;
 public class TestServer {
 
 	public static void main(String[] args) {
-		try {
 			AtomicInteger count = new AtomicInteger(0);
 			ServerParam param = new ServerParam("localhost", 8888);
 			param.setLogLevel(Level.WARNING);
@@ -44,10 +43,6 @@ public class TestServer {
 			});
 			LightCommServer server = new LightCommServer(param, 4);
 			server.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 }

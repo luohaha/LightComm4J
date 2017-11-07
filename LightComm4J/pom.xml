@@ -5,8 +5,8 @@
 	<artifactId>LightComm4J</artifactId>
 	<version>0.1.3</version>
 	<packaging>jar</packaging>
-
 	<name>LightComm4J</name>
+
 	<description>Yet another lightweight asynchronous network library for java</description>
 	<url>http://maven.apache.org</url>
 	
