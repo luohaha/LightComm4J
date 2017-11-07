@@ -54,8 +54,11 @@ public class RpcClient {
     /**
      * 远程调用，同步模式
      * @param function
+     * 函数名
      * @param fparamList
+     * 参数
      * @return
+     * 返回结果
      */
     public Object call(String function, Object... fparamList) {
         List<Object> fparams = new ArrayList<>();
