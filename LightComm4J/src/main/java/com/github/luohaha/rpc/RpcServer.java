@@ -1,6 +1,10 @@
 package com.github.luohaha.rpc;
 
+import com.github.luohaha.connection.Conn;
 import com.github.luohaha.exception.ConnectionCloseException;
+import com.github.luohaha.inter.OnAcceptError;
+import com.github.luohaha.inter.OnReadError;
+import com.github.luohaha.inter.OnWriteError;
 import com.github.luohaha.param.ServerParam;
 import com.github.luohaha.server.LightCommServer;
 import com.github.luohaha.tools.ObjectAndByteArray;
@@ -43,6 +47,10 @@ public class RpcServer {
                 this.logger.warning(e.toString());
             }
         });
+        ErrorHandle errorHandle = new ErrorHandle();
+        this.param.setOnAcceptError(errorHandle);
+        this.param.setOnReadError(errorHandle);
+        this.param.setOnWriteError(errorHandle);
         LightCommServer server = new LightCommServer(param, ioThreadPoolSize);
         server.start();
     }
@@ -74,5 +82,33 @@ public class RpcServer {
 
     public IRpcFunction get(String function) {
         return this.functions.get(function);
+    }
+
+    private class ErrorHandle implements OnAcceptError, OnReadError, OnWriteError {
+
+        @Override
+        public void onAcceptError(Exception e) {
+            logger.warning(e.toString());
+        }
+
+        @Override
+        public void onReadError(Conn conn, Exception e) {
+            logger.warning(e.toString());
+            try {
+                conn.doClose();
+            } catch (IOException e1) {
+                logger.warning(e1.toString());
+            }
+        }
+
+        @Override
+        public void onWriteError(Conn conn, Exception e) {
+            logger.warning(e.toString());
+            try {
+                conn.doClose();
+            } catch (IOException e1) {
+                logger.warning(e1.toString());
+            }
+        }
     }
 }

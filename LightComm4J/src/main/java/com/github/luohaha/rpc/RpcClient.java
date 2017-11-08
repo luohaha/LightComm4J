@@ -3,7 +3,10 @@ package com.github.luohaha.rpc;
 import com.github.luohaha.client.LightCommClient;
 import com.github.luohaha.connection.Conn;
 import com.github.luohaha.exception.ConnectionCloseException;
+import com.github.luohaha.inter.OnConnectError;
 import com.github.luohaha.inter.OnRead;
+import com.github.luohaha.inter.OnReadError;
+import com.github.luohaha.inter.OnWriteError;
 import com.github.luohaha.param.ClientParam;
 import com.github.luohaha.tools.ObjectAndByteArray;
 
@@ -77,13 +80,16 @@ public class RpcClient {
         });
         RpcRead rpcRead = new RpcRead();
         this.param.setOnRead(rpcRead);
+        this.param.setOnConnectError(rpcRead);
+        this.param.setOnReadError(rpcRead);
+        this.param.setOnWriteError(rpcRead);
         this.client.connect(this.host, this.port, param);
         return rpcRead.getData();
     }
 
-    private class RpcRead implements OnRead {
+    private class RpcRead implements OnRead, OnConnectError, OnReadError, OnWriteError {
 
-        private Object data;
+        private Object data = null;
         private CountDownLatch countDownLatch = new CountDownLatch(1);
 
         @Override
@@ -107,6 +113,24 @@ public class RpcClient {
                 }
             } while (true);
             return data;
+        }
+
+        @Override
+        public void onConnectError(Exception e) {
+            logger.warning(e.toString());
+            countDownLatch.countDown();
+        }
+
+        @Override
+        public void onReadError(Conn conn, Exception e) {
+            logger.warning(e.toString());
+            countDownLatch.countDown();
+        }
+
+        @Override
+        public void onWriteError(Conn conn, Exception e) {
+            logger.warning(e.toString());
+            countDownLatch.countDown();
         }
     }
 }
